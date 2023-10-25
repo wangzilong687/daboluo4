@@ -16,7 +16,7 @@ from aip import AipOcr
 
 import configparser
 
-#pyinstaller -D --add-data "config.ini;." --add-data "utils/;utils/"  daboluo.py
+# pyinstaller -D --add-data "config.ini;." --add-data "utils/;utils/"  daboluo.py
 
 # 如果程序被打包，使用打包的路径
 if getattr(sys, 'frozen', False):
@@ -148,7 +148,6 @@ def baiduai(image):
     list = result['words_result']
 
     for item in list:
-        print(item)
         if '先祖稀有裤子' in item['words']:
             the_name = '裤子'  # 生命上限
             keywords = kuzi
@@ -177,7 +176,7 @@ def baiduai(image):
             the_name = '护符'
             keywords = hufu
             break
-        elif ('先祖稀有先祖稀有双手锤' in item['words']):
+        elif ('先祖稀有双手锤' in item['words']):
             the_name = '双手锤'
             keywords = shuangshouchui
             break
@@ -227,18 +226,23 @@ def baiduai(image):
             break
 
     if keywords is not None:
-        for item in list:
-            for keyword in keywords:
+        for keyword in keywords:
+            for item in list:
+                print(keyword,item['words'])
                 if keyword in item['words']:
                     count += 1
+                    break
 
     if count >= 3:
-        level = 'SSS'
+        level = '3中'
     elif count >= 2:
-        level = 'S'
+        level = '2中'
+    elif count >= 1:
+        level = '1中'
     else:
-        level = 'A'
+        level = '垃圾'
 
+    print(count, 'count')
     return (the_name, level)
 
 
@@ -269,7 +273,6 @@ def _run_():
         for y in range(c_y_count):
             for x in range(c_x_count):
                 duration = random.uniform(0.3, 0.5)
-                print(duration)
                 pyautogui.moveTo(c_start_x, c_start_y, duration=duration)
                 pyautogui.click(c_start_x, c_start_y)
                 time.sleep(0.1)
@@ -282,8 +285,6 @@ def _run_():
                 axy = find_text_position(resource_path("utils/axy.jpg"))
                 bxy = find_text_position(resource_path("utils/bxy.jpg"))
 
-                print(axy, 'axy')
-
                 if (axy is not None and bxy is not None):
                     img = ImageGrab.grab(
                         bbox=(axy[0], axy[1], bxy[0] + 100, bxy[1] + 50))
@@ -295,7 +296,7 @@ def _run_():
                                f"{name}-{b+1}-{y+1}-{x+1}.png")
 
                 else:
-                    print("当前床被拦为空")
+                    print("当前装备拦为空或者非稀有")
                 c_start_x += x_grow
 
             c_start_x = start_x
